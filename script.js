@@ -55,16 +55,30 @@ document.addEventListener('DOMContentLoaded', () => {
 // Mobile Navigation Toggle
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
+const menuClose = document.getElementById('menuClose');
+const menuOverlay = document.getElementById('menuOverlay');
 
 if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
+    const openMenu = () => {
+        navLinks.classList.add('active');
+        if (menuOverlay) menuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeMenu = () => {
+        navLinks.classList.remove('active');
+        if (menuOverlay) menuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    menuToggle.addEventListener('click', openMenu);
+    if (menuClose) menuClose.addEventListener('click', closeMenu);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
 
     // Close mobile menu when clicking on a link
     document.querySelectorAll('.nav-links a').forEach((link) => {
         link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
+            closeMenu();
             // Optimistically set active on click; observer will correct if needed
             document.querySelectorAll('.nav-links a.active').forEach((a) => a.classList.remove('active'));
             link.classList.add('active');

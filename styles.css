@@ -161,6 +161,46 @@ nav.scrolled {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Mobile menu close and overlay */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+    z-index: 900;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.menu-close-item {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menu-close-item {
+        display: block;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+
+    .menu-close {
+        background: transparent;
+        border: 1px solid var(--divider-color);
+        color: var(--text-color);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+    }
+}
+
 .logo {
     font-size: 24px;
     font-weight: 700;
