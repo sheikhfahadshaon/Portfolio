@@ -1,3 +1,57 @@
+// Theme: respect system, allow override via toggle, and persist choice
+const rootEl = document.documentElement;
+const THEME_KEY = 'preferred-theme';
+
+const applyTheme = (theme) => {
+    if (theme === 'light' || theme === 'dark') {
+        rootEl.setAttribute('data-theme', theme);
+    } else {
+        rootEl.removeAttribute('data-theme');
+    }
+};
+
+const getSystemTheme = () => (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+const loadInitialTheme = () => {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === 'light' || stored === 'dark') {
+        applyTheme(stored);
+    } else {
+        // No preference stored; follow system
+        applyTheme(undefined);
+    }
+};
+
+const toggleTheme = () => {
+    const current = rootEl.getAttribute('data-theme');
+    const next = current ? (current === 'dark' ? 'light' : 'dark') : getSystemTheme() === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+};
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (!stored) {
+        // Only auto-update when user hasn't explicitly chosen a theme
+        applyTheme(undefined);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadInitialTheme();
+    const switchEl = document.getElementById('themeSwitch');
+    if (switchEl) {
+        // Initialize switch position based on effective theme
+        const effectiveTheme = rootEl.getAttribute('data-theme') || getSystemTheme();
+        switchEl.checked = effectiveTheme === 'dark';
+        switchEl.addEventListener('change', () => {
+            const next = switchEl.checked ? 'dark' : 'light';
+            applyTheme(next);
+            localStorage.setItem(THEME_KEY, next);
+        });
+    }
+});
+
 // Mobile Navigation Toggle
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');

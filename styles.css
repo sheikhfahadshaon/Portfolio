@@ -1,12 +1,78 @@
+/* Theme variables */
 :root {
+    /* Brand */
     --primary-color: #4a6bff;
     --secondary-color: #6c63ff;
     --accent-color: #ff5e78;
+
+    /* Light theme defaults */
+    --dark-color: #f7f8fc;
+    /* page background */
+    --light-dark: #ffffff;
+    /* surfaces */
+    --text-color: #0f172a;
+    /* slate-900 */
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.7);
+    --nav-bg-scrolled: rgba(255, 255, 255, 0.95);
+    --scrollbar-track: #e6e8ef;
+    --scrollbar-thumb: #c5c8d2;
+    --divider-color: rgba(15, 23, 42, 0.08);
+    --chip-bg: #f1f5f9;
+    /* slate-100 */
+
+    --transition: all 0.3s ease;
+    --input-bg: #ffffff;
+    --input-border: rgba(15, 23, 42, 0.18);
+}
+
+/* Respect system preference by default (when no explicit data-theme override) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dark-color: #000000;
+        --light-dark: #1e1e3f;
+        --text-color: #e4e6eb;
+        --card-bg: rgba(30, 30, 63, 0.7);
+        --nav-bg: rgba(18, 18, 37, 0.7);
+        --nav-bg-scrolled: rgba(18, 18, 37, 0.9);
+        --scrollbar-track: #1e1e3f;
+        --scrollbar-thumb: var(--primary-color);
+        --divider-color: rgba(255, 255, 255, 0.12);
+        --chip-bg: var(--light-dark);
+        --input-bg: var(--light-dark);
+        --input-border: rgba(255, 255, 255, 0.18);
+    }
+}
+
+/* Explicit overrides via data-theme attribute */
+:root[data-theme="light"] {
+    --dark-color: #f7f8fc;
+    --light-dark: #ffffff;
+    --text-color: #0f172a;
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.7);
+    --nav-bg-scrolled: rgba(255, 255, 255, 0.95);
+    --scrollbar-track: #e6e8ef;
+    --scrollbar-thumb: #c5c8d2;
+    --divider-color: rgba(15, 23, 42, 0.16);
+    --chip-bg: #f1f5f9;
+    --input-bg: #ffffff;
+    --input-border: rgba(15, 23, 42, 0.22);
+}
+
+:root[data-theme="dark"] {
     --dark-color: #000000;
     --light-dark: #1e1e3f;
     --text-color: #e4e6eb;
     --card-bg: rgba(30, 30, 63, 0.7);
-    --transition: all 0.3s ease;
+    --nav-bg: rgba(18, 18, 37, 0.7);
+    --nav-bg-scrolled: rgba(18, 18, 37, 0.9);
+    --scrollbar-track: #1e1e3f;
+    --scrollbar-thumb: var(--primary-color);
+    --divider-color: rgba(255, 255, 255, 0.12);
+    --chip-bg: var(--light-dark);
+    --input-bg: var(--light-dark);
+    --input-border: rgba(255, 255, 255, 0.18);
 }
 
 * {
@@ -62,11 +128,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--light-dark);
+    background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
+    background: var(--scrollbar-thumb);
     border-radius: 5px;
 }
 
@@ -85,13 +151,13 @@ nav {
     align-items: center;
     z-index: 1000;
     transition: var(--transition);
-    background: rgba(18, 18, 37, 0.7);
+    background: var(--nav-bg);
     backdrop-filter: blur(10px);
 }
 
 nav.scrolled {
     padding: 15px 5%;
-    background: rgba(18, 18, 37, 0.9);
+    background: var(--nav-bg-scrolled);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -149,6 +215,92 @@ nav.scrolled {
 .nav-links a.active {
     color: var(--primary-color);
 }
+
+.menu-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--chip-bg);
+    border: 1px solid var(--divider-color);
+    transition: var(--transition);
+    border-radius: 9999px;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: '';
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--text-color);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.switch-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.switch-icon--light {
+    left: 8px;
+}
+
+.switch-icon--dark {
+    right: 8px;
+}
+
+/* Icon emphasis by state */
+.theme-switch input:not(:checked)+.switch-slider .switch-icon--dark {
+    opacity: 0.45;
+}
+
+.theme-switch input:checked+.switch-slider .switch-icon--light {
+    opacity: 0.45;
+}
+
+.theme-switch input:checked+.switch-slider .switch-icon {
+    color: #ffffff;
+}
+
+.theme-switch input:checked+.switch-slider {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border-color: transparent;
+}
+
+.theme-switch input:checked+.switch-slider:before {
+    transform: translate(24px, -50%);
+    background: #ffffff;
+}
+
 
 .nav-links a.active::after {
     width: 100%;
@@ -332,7 +484,7 @@ nav.scrolled {
     padding: 30px;
     text-align: center;
     transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
 }
 
 .skill-card:hover {
@@ -372,9 +524,9 @@ nav.scrolled {
 
 .filter-btn {
     padding: 8px 20px;
-    background: var(--light-dark);
-    border: none;
-    border-radius: 20px;
+    background: var(--chip-bg);
+    border: 1px solid var(--divider-color);
+    border-radius: 999px;
     color: var(--text-color);
     font-weight: 500;
     cursor: pointer;
@@ -396,10 +548,10 @@ nav.scrolled {
 .project-card {
     background: var(--card-bg);
     backdrop-filter: blur(10px);
-    border-radius: 15px;
+    border-radius: 16px;
     overflow: hidden;
     transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
     display: flex;
     flex-direction: column;
 }
@@ -447,7 +599,7 @@ nav.scrolled {
 }
 
 .tag {
-    background: var(--light-dark);
+    background: var(--chip-bg);
     padding: 5px 12px;
     border-radius: 15px;
     font-size: 0.8rem;
@@ -485,7 +637,7 @@ nav.scrolled {
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
 }
 
 .cp-achievements h3 {
@@ -526,7 +678,7 @@ nav.scrolled {
     padding: 25px;
     text-align: center;
     transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
 }
 
 .cp-card:hover {
@@ -623,7 +775,7 @@ nav.scrolled {
     background: var(--card-bg);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
     position: relative;
 }
 
@@ -658,9 +810,9 @@ nav.scrolled {
     flex: 1;
     background: var(--card-bg);
     backdrop-filter: blur(10px);
-    border-radius: 15px;
+    border-radius: 16px;
     padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
 }
 
 .contact-info h3 {
@@ -686,9 +838,9 @@ nav.scrolled {
     flex: 1;
     background: var(--card-bg);
     backdrop-filter: blur(10px);
-    border-radius: 15px;
+    border-radius: 16px;
     padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--divider-color);
 }
 
 .contact-form h3 {
@@ -711,8 +863,8 @@ nav.scrolled {
 .form-group textarea {
     width: 100%;
     padding: 12px 15px;
-    background: var(--light-dark);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     color: var(--text-color);
     font-family: 'Poppins', sans-serif;
